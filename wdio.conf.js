@@ -1,3 +1,4 @@
+//const allure = require('allure-commandline')
 exports.config = {
     //
     // ====================
@@ -21,12 +22,18 @@ exports.config = {
     // will be called from there.
     //
     specs: [
-        './test/specs/**/*.js'
+        './module4/specs/**/*.js'
+        
     ],
     // Patterns to exclude.
     exclude: [
         // 'path/to/excluded/files'
     ],
+    suites:{
+        login:[
+            '../test/specs/*.js'
+        ]
+    },
     //
     // ============
     // Capabilities
@@ -57,6 +64,12 @@ exports.config = {
         maxInstances: 5,
         //
         browserName: 'chrome',
+        'goog:chromeOptions':{
+            args:[
+                '--start-maximized'
+            ],
+            excludeSwitches:['enable-automation']
+        },
         acceptInsecureCerts: true
         // If outputDir is provided WebdriverIO can capture driver session logs
         // it is possible to configure which logTypes to include/exclude.
@@ -94,7 +107,7 @@ exports.config = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    baseUrl: 'https://the-internet.herokuapp.com/login',
+    baseUrl: 'https://www.saucedemo.com/',
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 10000,
@@ -110,8 +123,8 @@ exports.config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['chromedriver'],
-    
+    //services: ['chromedriver'],
+    services:['devtools'],//,{debuggerAddress: 'localhost:9222'}],
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
     // see also: https://webdriver.io/docs/frameworks
@@ -132,7 +145,11 @@ exports.config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: ['spec'],
+    reporters: [['allure', {
+        outputDir: 'allure-results',
+        disableWebdriverStepsReporting: true,
+        disableWebdriverScreenshotsReporting: true,
+    }]],
 
 
     
@@ -186,8 +203,9 @@ exports.config = {
      * @param {Array.<String>} specs List of spec file paths that are to be run
      * @param {String} cid worker id (e.g. 0-0)
      */
-    // beforeSession: function (config, capabilities, specs, cid) {
-    // },
+     beforeSession: function (config, capabilities, specs, cid) {
+        dns.setDefaultResultOrder('ipv4first');
+     },
     /**
      * Gets executed before test execution begins. At this point you can access to all global
      * variables like `browser`. It is the perfect place to define custom commands.
