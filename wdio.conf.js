@@ -22,7 +22,7 @@ exports.config = {
     // will be called from there.
     //
     specs: [
-        './module3/specs/**/*.js'
+        './mod3/specs/**/*.js'
         
     ],
     // Patterns to exclude.
